@@ -8,8 +8,7 @@ pipeline {
     stages {
         stage('Verification') {
             steps {
-                sh 'test -f app.py'
-                sh 'test -f Dockerfile'
+                sh 'test -f app.py && test -f Dockerfile'
             }
         }
 
@@ -21,9 +20,9 @@ pipeline {
 
         stage('Deploiement Kubernetes') {
             steps {
-                sh 'minikube image load mon-app-devops:v1'
-                sh 'kubectl apply -f deployment.yaml'
-                sh 'kubectl apply -f service.yaml'
+                sh 'sudo -u vagrant /usr/local/bin/minikube image load mon-app-devops:v1'
+                sh 'KUBECONFIG=/home/vagrant/.kube/config kubectl apply -f deployment.yaml'
+                sh 'KUBECONFIG=/home/vagrant/.kube/config kubectl apply -f service.yaml'
             }
         }
     }
